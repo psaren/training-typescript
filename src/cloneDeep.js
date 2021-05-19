@@ -2,10 +2,9 @@ function cloneDeep(obj) {
   const cache = new WeakMap();
   function baseClone(entity) {
 
-    const referenceTypes = ['Array', 'Object', 'Map', 'Set', 'WeakMap', 'WeakSet'];
+    const referenceTypes = ['Array', 'Object', 'Map', 'Set'];
     const entityType = Object.prototype.toString.call(entity);
     if (!new RegExp(referenceTypes.join('|')).test(entityType)) return entity;
-    if (entity instanceof WeakMap || entity instanceof WeakSet) return entity;
 
     if (cache.has(entity)) {
       return cache.get(entity);
