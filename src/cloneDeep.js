@@ -1,33 +1,82 @@
-function cloneDeep(obj) {
-  const cache = new WeakMap();
-  function baseClone(entity) {
-
-    const referenceTypes = ['Array', 'Object', 'Map', 'Set'];
-    const entityType = Object.prototype.toString.call(entity);
-    if (!new RegExp(referenceTypes.join('|')).test(entityType)) return entity;
-
-    if (cache.has(entity)) {
-      return cache.get(entity);
-    }
-
-    const c = new entity.constructor;
-
-    cache.set(entity, c);
-
-    if (entity instanceof Map) {
-      entity.forEach((value, key) => c.set(baseClone(key), baseClone(value)));
-    }
-    if (entity instanceof Set) {
-      entity.forEach((value) => c.add(baseClone(value)));
-    }
-
-    const objectOrArrayEntity = Object.keys(entity).map((prop) => ({
-      [prop]: baseClone(entity[prop])
-    }))
-
-    return Object.assign(c, ...objectOrArrayEntity);
-  }
-  return baseClone(obj)
+/**
+ * Creates a clone of the `symbol` object.
+ * @param {Object} symbol The symbol object to clone.
+ * @returns {Object} Returns the cloned symbol object.
+ */
+function cloneSymbol(symbol) {
+  return symbolValueOf ? Object(symbolValueOf.call(symbol)) : {};
 }
 
-export default cloneDeep
+function cloneRegExp(regexp) {
+  const reFlags = /\w*$/
+  const result = new regexp.constructor(regexp.source, reFlags.exec(regexp))
+  result.lastIndex = regexp.lastIndex
+  return result
+}
+
+function getType(obj) {
+  return Object.prototype.toString.call(obj).slice(8, -1);
+}
+
+function cloneDeep(obj) {
+  const cacheMap = new WeakMap()
+  function cloneBase(entity) {
+    switch (getType(entity)) {
+      case 'Array':
+      case 'Object':
+      case 'Map':
+      case 'Set':
+        return cloneReference(entity)
+      case 'RegExp':
+        return cloneRegExp(entity)
+      case 'Symbol':
+        return cloneSymbol(entity)
+      default:
+        return new entity.constructor(entity)
+    }
+    function cloneReference(entity) {
+      if (cacheMap.has(entity)) {
+        return cacheMap.get(entity);
+      }
+
+      const c = new entity.constructor;
+
+      cacheMap.set(entity, c);
+
+      if (entity instanceof Map) {
+        entity.forEach((value, key) => c.set(cloneBase(key), cloneBase(value)));
+      }
+      if (entity instanceof Set) {
+        entity.forEach((value) => c.add(cloneBase(value)));
+      }
+
+      const keysWithSymbol = Object.keys(entity).concat(Object.getOwnPropertySymbols(entity))
+
+      const objectOrArrayEntity = keysWithSymbol.map((prop) => ({
+        [prop]: cloneBase(entity[prop])
+      }))
+
+      return Object.assign(c, ...objectOrArrayEntity);
+    }
+  }
+  return cloneBase(obj)
+}
+
+module.default = cloneDeep
+
+/****** test ******/
+const s = Symbol('s')
+const a = {
+  num: 1,
+  str: 'string',
+  [s]: 'symbol',
+  map: new Map(),
+  set: new Set(),
+  boolean: true,
+  reg: /hello/gim,
+  func: function a() { }
+}
+
+a['self'] = a
+
+console.log(`cloneDeep(a)`, cloneDeep(a))
