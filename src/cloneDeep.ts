@@ -1,22 +1,22 @@
-function cloneRegExp(regexp) {
+function cloneRegExp(regexp: RegExp) {
   const reFlags = /\w*$/
-  const result = new regexp.constructor(regexp.source, reFlags.exec(regexp))
+  const result = new RegExp(regexp.source, reFlags.exec(regexp.toString())?.toString())
   result.lastIndex = regexp.lastIndex
   return result
 }
 
-function getType(obj) {
+function getType(obj: unknown) {
   return Object.prototype.toString.call(obj).slice(8, -1);
 }
 
-function isReferenceType(obj) {
+function isReferenceType(obj: unknown) {
   const objType = typeof obj
   return obj !== null && (objType === 'object' || objType === 'function')
 }
 
-function cloneDeep(obj) {
+function cloneDeep<T>(obj: T): T {
   const cacheMap = new WeakMap()
-  function cloneBase(entity) {
+  function cloneBase(entity: any) {
     if (!isReferenceType(entity)) {
       return entity
     }
@@ -31,7 +31,7 @@ function cloneDeep(obj) {
       default:
         return new entity.constructor(entity)
     }
-    function cloneReference(entity) {
+    function cloneReference(entity: any) {
       if (cacheMap.has(entity)) {
         return cacheMap.get(entity);
       }
@@ -47,9 +47,9 @@ function cloneDeep(obj) {
         entity.forEach((value) => c.add(cloneBase(value)));
       }
 
-      const keysWithSymbol = Object.keys(entity).concat(Object.getOwnPropertySymbols(entity))
+      const keysWithSymbol: Array<string | symbol> = [...Object.keys(entity), ...Object.getOwnPropertySymbols(entity)]
 
-      const objectOrArrayEntity = keysWithSymbol.map((prop) => ({
+      const objectOrArrayEntity: unknown[] = keysWithSymbol.map((prop) => ({
         [prop]: cloneBase(entity[prop])
       }))
 
@@ -59,23 +59,4 @@ function cloneDeep(obj) {
   return cloneBase(obj)
 }
 
-module.default = cloneDeep
-
-/****** test ******/
-const s = Symbol('s')
-const a = {
-  num: 1,
-  str: 'string',
-  [s]: 'symbol',
-  map: new Map(),
-  set: new Set(),
-  boolean: true,
-  reg: /hello/gim,
-  func: function a() { },
-  und: undefined,
-  null: null,
-  sym: Symbol()
-}
-
-a['self'] = a
-console.log(`cloneDeep(a)`, cloneDeep(a))
+export default cloneDeep
