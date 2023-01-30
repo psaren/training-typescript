@@ -5,7 +5,7 @@ declare global {
   interface Window { }
 }
 
-Function.prototype.myBind = function myBind(this: Function) {
+Function.prototype.myBind = function myBind() {
   if (typeof this !== 'function') {
     throw new TypeError('当前调用myBind方法的不是函数！')
   }

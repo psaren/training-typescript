@@ -1,14 +1,12 @@
 interface Prop extends PropertyDescriptor {
-  key: string;
+  key: PropertyKey;
 }
 const _defineProperties = (target: Object, props: Prop[]) => {
   for (let i = 0;i < props.length;i++) {
     let descriptor = props[i];
     descriptor.enumerable = descriptor.enumerable || false;
     descriptor.configurable = true;
-    if (descriptor.value) {
-      descriptor.writable = true;
-    }
+    if ('value' in descriptor) descriptor.writable = true;
     Object.defineProperty(target, descriptor.key, descriptor);
   }
 }

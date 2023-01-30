@@ -2,9 +2,9 @@ function throttle<F extends ((...args: unknown[]) => void)>(fn: F, threshhold: n
   let last: number
   let timer: NodeJS.Timeout | null
 
-  return function (this: any, ...args: Parameters<F>) {
+  return function (context: any, ...args: Parameters<F>) {
     const now = Date.now()
-    const _this = this
+    const _this = context
 
     if (last && now < last + threshhold) {
       if (timer) {
