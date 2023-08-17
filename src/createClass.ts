@@ -16,3 +16,13 @@ const createClass = (Constructor: Function, protoProps: Prop[], staticProps: Pro
   if (staticProps) _defineProperties(Constructor, staticProps);
   return Constructor;
 }
+
+function Person(this: any, name: string, age: number) {
+  this.name = name;
+  this.age = age;
+}
+Person.prototype = {
+  sayHello: function () {
+    console.log(`Hello, my name is ${this.name}, i was ${this.age} year old.`)
+  }
+}
