@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="container" style="height: 1200px;background-color: aqua;"></div>
+  <script>
+     //距离视窗还用50的时候，开始触发；
+    
+    const handleScroll = () => {
+      window.requestAnimationFrame(() => {
+        let clientHeight = document.documentElement.clientHeight; //浏览器高度
+        let scrollHeight = document.body.scrollHeight;
+        let scrollTop = document.documentElement.scrollTop;
+        let distance = 50;
+        if ((scrollTop + clientHeight) >= (scrollHeight - distance)) {
+          console.log('开始加载数据');
+        }
+      })
+    };
+    handleScroll();
+    document.addEventListener('scroll', handleScroll);
+  </script>
+</body>
+</html>
