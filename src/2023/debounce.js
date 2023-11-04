@@ -1,17 +1,14 @@
 function debounce (fn, timeout, immediate) {
   let timer = null;
+  // immediateCall 标记是否立即执行过了
+  let immediateCall = false;
   return function () {
     const context = this;
     const args = [...arguments];
     if (timer) clearTimeout(timer);
-    if (immediate) {
-      const callNow = !timeout;
-      timer = setTimeout(function () {
-        timer = null;
-        }, wait)
-      if (callNow) {
-        fn.apply(context, args);
-      }
+    if (immediate && !immediateCall) {
+      fn.apply(context, args);
+      immediateCall = true;
     } else {
       timer = setTimeout(() => {
         fn.apply(context, args);
