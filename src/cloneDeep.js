@@ -31,30 +31,30 @@ function cloneDeep(obj) {
       default:
         return new entity.constructor(entity)
     }
-    function cloneReference(entity) {
-      if (cacheMap.has(entity)) {
-        return cacheMap.get(entity);
-      }
-
-      const c = new entity.constructor;
-
-      cacheMap.set(entity, c);
-
-      if (entity instanceof Map) {
-        entity.forEach((value, key) => c.set(cloneBase(key), cloneBase(value)));
-      }
-      if (entity instanceof Set) {
-        entity.forEach((value) => c.add(cloneBase(value)));
-      }
-
-      const keysWithSymbol = Object.keys(entity).concat(Object.getOwnPropertySymbols(entity))
-
-      const objectOrArrayEntity = keysWithSymbol.map((prop) => ({
-        [prop]: cloneBase(entity[prop])
-      }))
-
-      return Object.assign(c, ...objectOrArrayEntity);
+  }
+  function cloneReference(entity) {
+    if (cacheMap.has(entity)) {
+      return cacheMap.get(entity);
     }
+
+    const c = new entity.constructor;
+
+    cacheMap.set(entity, c);
+
+    if (entity instanceof Map) {
+      entity.forEach((value, key) => c.set(cloneBase(key), cloneBase(value)));
+    }
+    if (entity instanceof Set) {
+      entity.forEach((value) => c.add(cloneBase(value)));
+    }
+
+    const keysWithSymbol = Object.keys(entity).concat(Object.getOwnPropertySymbols(entity))
+
+    const objectOrArrayEntity = keysWithSymbol.map((prop) => ({
+      [prop]: cloneBase(entity[prop])
+    }))
+
+    return Object.assign(c, ...objectOrArrayEntity);
   }
   return cloneBase(obj)
 }
