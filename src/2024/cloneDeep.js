@@ -8,6 +8,8 @@ const cloneDeep = (obj) => {
   // 深拷贝基本函数
   const cloneBase = (o) => {
     if (isObject(o) || isFunction(o)) {
+      if (o instanceof Date) return new Date(o);
+      if (o instanceof RegExp) return new RegExp(o);
       return cloneReference(o);
     }
     return o;
@@ -36,11 +38,10 @@ const cloneDeep = (obj) => {
     const keys = Object.keys(o).concat(Object.getOwnPropertySymbols(o));
 
     // 对每个属性进行深拷贝
-    const res = keys.map((prop) => ({
-      [prop]: cloneBase(o[prop]),
-    }));
-
-    return Object.assign(c, ...res);
+    keys.forEach((k) => {
+      c[k] = cloneBase(obj[k]);
+    });
+    return c;
   };
 
   // 深拷贝包括原型链的函数
