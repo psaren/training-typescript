@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>about</title>
+</head>
+<body>
+  <script>
+    // 创建一个名为 'testChannel' 的 BroadcastChannel 实例
+    const channel = new BroadcastChannel('testChannel');
+
+    // 监听消息事件
+    channel.addEventListener('message', (event) => {
+      console.log(`收到消息：${event.data}`);
+      // 可以在这里处理接收到的消息
+    });
+
+    // 发送消息
+    channel.postMessage('Hello from about!');
+
+    // 可选 - 监听错误事件
+    channel.addEventListener('messageerror', (event) => {
+      console.error('消息传递发生错误：', event);
+    });
+
+    // 当不再需要通信时关闭 BroadcastChannel
+    // channel.close();
+  </script>
+</body>
+</html>
