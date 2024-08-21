@@ -1,4 +1,4 @@
-const quickSort = (arr: number[]): number[] => {
+export const quickSort = (arr: number[]): number[] => {
   if (arr.length < 2) return arr;
   const mid = arr[0];
   let left = [];
@@ -12,5 +12,3 @@ const quickSort = (arr: number[]): number[] => {
   }
   return quickSort(left).concat([mid], quickSort(right))
 };
-
-console.log(quickSort([2,1,3,6,5]));

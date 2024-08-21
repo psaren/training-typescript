@@ -1,5 +1,5 @@
-let sum = 0;
-const mergeSort = (nums: number[]): number[] => {
+// let sum = 0;
+export const mergeSort = (nums: number[]): number[] => {
   if (nums.length < 2) return nums;
   const mid = Math.floor(nums.length / 2);
   const left = nums.slice(0, mid);
@@ -11,7 +11,7 @@ const mergeSort = (nums: number[]): number[] => {
       if (left[0] <= right[0]) {
         result.push(left.shift()!);
       } else {
-        sum++;
+        // sum++;
         result.push(right.shift()!);
       }
     }
@@ -29,4 +29,4 @@ const mergeSort = (nums: number[]): number[] => {
 
 
 console.log(mergeSort([7,3,2,6,0,1,5,4]));
-console.log('sum', sum);
+// console.log('sum', sum);

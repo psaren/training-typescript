@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul id="container"></ul>
+    <script>
+      const total = 100000;
+      let ul = document.getElementById("container");
+      let once = 20; // 初始渲染数量
+      let lastFrameTime = 0; // 上一帧渲染时间
+
+      function loop(curTotal, deltaTime) {
+        if (curTotal <= 0) return;
+
+        // 根据上一帧的渲染时间动态调整渲染数量
+        let renderCount = Math.min(curTotal, once);
+
+        if (deltaTime > 16) {
+          // 如果渲染时间超过16ms，减少渲染数量
+          once = Math.max(Math.floor(once * 0.8), 3);
+        } else {
+          // 如果渲染时间远小于16ms，增加渲染数量
+          once = Math.ceil(Math.min(once * 1.2, 50)); // 但不超过50
+        }
+
+        window.requestAnimationFrame(() => {
+          let fragment = document.createDocumentFragment();
+          for (let i = 0; i < renderCount; i++) {
+            let li = document.createElement("li");
+            li.textContent = ~~(Math.random() * total);
+            fragment.appendChild(li);
+          }
+          ul.appendChild(fragment);
+          const endTime = performance.now();
+          lastFrameTime = endTime - startTime; // 当前帧的渲染时间
+          startTime = endTime;
+          loop(curTotal - renderCount, lastFrameTime);
+        });
+      }
+
+      let startTime = performance.now();
+      loop(total, 17);
+    </script>
+  </body>
+</html>

@@ -1,4 +1,7 @@
-const myInstanceof = (target: any, origin: any): boolean => {
+export const myInstanceof = (target: any, origin: any): boolean => {
+  if (typeof target !== 'object' || target === null) {
+    return false;
+  }
   const proto = target.__proto__;
   if (proto) {
     if (origin.prototype === proto) {
@@ -10,7 +13,7 @@ const myInstanceof = (target: any, origin: any): boolean => {
     return false;
   }
 };
-const customInstanceof = (left: any, right: any): boolean => {
+export const customInstanceof = (left: any, right: any): boolean => {
   if (typeof left !== 'object' || left === null) {
     return false;
   }
@@ -29,5 +32,3 @@ const customInstanceof = (left: any, right: any): boolean => {
     leftProto = Object.getPrototypeOf(leftProto);
   }
 }
-console.log(myInstanceof([1], Object));
-console.log(customInstanceof([1], Object));

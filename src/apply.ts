@@ -14,7 +14,7 @@ Function.prototype.myApply = function myApply(this: Function) {
   const ctx = args[0] || globalThis
   const fn = Symbol('fn')
   ctx[fn] = this
-  const result = ctx[fn](...args[1])
+  const result = ctx[fn](...(args[1] || []))
   delete ctx[fn]
   return result
 }

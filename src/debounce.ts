@@ -8,6 +8,9 @@ function debounce<F extends ((...args: any[]) => void)>(fn: F, wait: number, imm
       if (!immediate) result = fn.apply(_this, args)
     }
     const callNow = immediate && !timer
+    if (timer) {
+      clearTimeout(timer); // 清除之前的定时器
+    }
     timer = globalThis.setTimeout(later, wait)
     if (callNow) result = fn.apply(_this, args);
     return result
