@@ -39,7 +39,7 @@ const cloneDeep = (obj) => {
 
     // 对每个属性进行深拷贝
     keys.forEach((k) => {
-      c[k] = cloneBase(obj[k]);
+      c[k] = cloneBase(o[k]);
     });
     return c;
   };

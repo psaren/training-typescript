@@ -11,6 +11,7 @@ function throttle (fn, delay = 500) {
     } else {
       timer = setTimeout(() => {
         fn.apply(null, args);
+        start = Date.now();
       }, remain);
     }
   }

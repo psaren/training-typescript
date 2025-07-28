@@ -23,5 +23,17 @@
       <div class="left">左边</div>
       <div class="right">右边</div>
     </div>
+    <script>
+      window.onload = () => {
+        window.addEventListener("message", (event) => {
+          console.log("event", event);
+          if (event.origin === "https://dmp.woa.com") {
+            // 确保消息来自预期的父页面源
+            const { parentOrigin } = event.data;
+            console.log("Received parent origin:", parentOrigin);
+          }
+        });
+      };
+    </script>
   </body>
 </html>
