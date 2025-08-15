@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function isDevToolsOpen() {
+      const devToolsHeight = window.outerHeight - window.innerHeight;
+      const devToolsWidth = window.outerWidth - window.innerWidth;
+      console.log('devToolsWidth', devToolsWidth)
+      console.log('devToolsHeight', devToolsHeight)
+      return devToolsHeight > 90 || devToolsWidth > 50;
+    }
+
+    if (isDevToolsOpen()) {
+      alert("开发者工具已打开，无法继续运行。");
+    }
+  </script>
+</body>
+</html>
