@@ -14,6 +14,12 @@
 </head>
 <body>
   <div class="square2"></div>
-
+  <script>
+    const worker = new Worker('./worker.js');
+    worker.postMessage({ type: 'mul', num: 6 });
+    worker.onmessage = (event) => {
+      console.log('event', event);
+    };
+  </script>
 </body>
 </html>
