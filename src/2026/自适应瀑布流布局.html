@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>自适应瀑布流布局 | CSS Columns 实现</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f7fa;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 24px 20px;
+        }
+
+        /* 主容器 - 瀑布流核心 */
+        .waterfall {
+            /* 关键：利用 column-width 实现自适应列数，每列最小宽度 260px */
+            column-width: 260px;
+            column-gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 单个卡片项 */
+        .card {
+            break-inside: avoid;          /* 防止卡片被分栏截断 */
+            margin-bottom: 20px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 卡片内图片占位区 (模拟不同高度的图片/内容) */
+        .card-media {
+            width: 100%;
+            background: #e2e8f0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 随机背景色和不同高度通过行内样式实现，但这里提供几种预设 */
+        .card-content {
+            padding: 16px 18px 20px;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        /* 页脚装饰 */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #64748b;
+            font-size: 0.85rem;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 24px;
+        }
+
+        /* 提示信息 */
+        .info {
+            background: #eef2ff;
+            border-radius: 28px;
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #1e40af;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 简单响应式优化：在小屏幕上减小列宽基准，保证阅读体验 */
+        @media (max-width: 640px) {
+            body {
+                padding: 16px 12px;
+            }
+            .waterfall {
+                column-width: 220px;
+                column-gap: 16px;
+            }
+            .card-content {
+                padding: 12px 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="info">
+    🎨 自适应瀑布流 | 基于 CSS <strong>column-width</strong> + <strong>break-inside: avoid</strong><br>
+    改变窗口宽度，列数自动调整，卡片高度随机，完美瀑布排列。
+</div>
+
+<div class="waterfall">
+    <!-- 卡片将会由 JS 动态生成，保证内容多样且高度不一，直观体现瀑布流效果 -->
+</div>
+
+<div class="footer">
+    💡 纯 CSS 实现 | 无需 JS 定位 | 列数随容器宽度自适应 | 卡片永不截断
+</div>
+
+<script>
+    // 生成模拟数据 —— 创建不同高度、不同配色的卡片，让瀑布流效果更明显
+    const container = document.querySelector('.waterfall');
+    
+    // 丰富的标题与描述库
+    const titles = [
+        "山间晨雾", "城市夜景", "海岸线", "森林秘境", "极光之旅",
+        "沙漠星空", "樱花漫道", "雪山之巅", "田园风光", "古巷韵味",
+        "未来建筑", "静谧湖泊", "落日余晖", "瀑布奇观", "花海徜徉"
+    ];
+    
+    const descList = [
+        "清晨薄雾笼罩山谷，仿佛置身仙境，呼吸间都是草木清香。",
+        "霓虹与高楼交错，夜幕下的城市脉搏永不停歇。",
+        "海浪拍打礁石，风里是咸湿的自由气息。",
+        "参天古树遮天蔽日，小径深处藏着苔藓与溪流。",
+        "绚丽极光在夜空中舞动，是大自然最浪漫的画笔。",
+        "沙丘连绵，夜晚银河清晰可见，寂静又壮阔。",
+        "春风拂过，花瓣如雨般飘落，铺成粉色地毯。",
+        "白雪覆盖群峰，阳光折射出耀眼的光芒。",
+        "麦浪起伏，农舍炊烟袅袅，岁月静好。",
+        "青石板路，红灯笼高挂，时光在这里放缓。",
+        "玻璃幕墙与流线型设计，勾勒出未来天际线。",
+        "湖水澄澈如镜，倒映着蓝天与山峦。",
+        "夕阳把云层染成金红色，温暖又治愈。",
+        "水流从高处倾泻，水雾弥漫，凉意沁人。",
+        "漫步花丛间，蝴蝶翩跹，色彩斑斓。"
+    ];
+    
+    // 随机生成不同高度的色块（模拟图片区域），同时确保卡片整体高度差异明显
+    // 色块使用渐变色，高度在 120px ~ 360px 之间随机，同时增加一些特别高的卡片强化瀑布效果
+    function getRandomHeight() {
+        // 让高度分布更丰富：普通 140~280，偶尔超高
+        const r = Math.random();
+        if (r < 0.7) {
+            return Math.floor(Math.random() * (260 - 140 + 1) + 140); // 140~260
+        } else if (r < 0.9) {
+            return Math.floor(Math.random() * (340 - 280 + 1) + 280); // 280~340
+        } else {
+            return Math.floor(Math.random() * (420 - 360 + 1) + 360); // 360~420 超高卡片
+        }
+    }
+    
+    // 随机颜色方案 (渐变)
+    const gradients = [
+        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+        "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+        "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+        "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+        "linear-gradient(135deg, #30cfd0 0%, #330867 100%)",
+        "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
+        "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)",
+        "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)",
+        "linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)",
+        "linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)",
+        "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+        "linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%)",
+        "linear-gradient(135deg, #c471f5 0%, #fa71cd 100%)",
+        "linear-gradient(135deg, #fdc830 0%, #f37335 100%)"
+    ];
+    
+    // 生成 28 张卡片，确保滚动效果和瀑布流密集感
+    const cardCount = 28;
+    
+    for (let i = 0; i < cardCount; i++) {
+        // 随机选取数据
+        const titleIndex = i % titles.length;
+        const descIndex = i % descList.length;
+        const title = titles[titleIndex];
+        const desc = descList[descIndex];
+        
+        // 随机高度和渐变
+        const mediaHeight = getRandomHeight();
+        const gradient = gradients[i % gradients.length];
+        
+        // 创建卡片元素
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        // 内部结构: 媒体区 + 内容区
+        // 媒体区根据不同高度模拟图片/色块效果，并附带一点优雅的小图标占位(可选)
+        card.innerHTML = `
+            <div class="card-media" style="height: ${mediaHeight}px; background: ${gradient}; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                <span style="background: rgba(0,0,0,0.3); padding: 6px 12px; border-radius: 40px; backdrop-filter: blur(4px); font-size: 0.85rem;">✧ 探索 ✧</span>
+            </div>
+            <div class="card-content">
+                <div class="card-title">${title}</div>
+                <div class="card-desc">${desc}</div>
+            </div>
+        `;
+        
+        container.appendChild(card);
+    }
+    
+    // 小技巧：因为卡片是动态生成的，加一个微小的延时确保浏览器重排时布局完美（无需额外操作）
+    // 另外在窗口 resize 时，columns 会自动重新排列，完美自适应，无需任何 js 干预。
+    console.log('瀑布流已加载，共生成', cardCount, '张卡片，宽度自适应，列数自动调整');
+</script>
+</body>
+</html>
