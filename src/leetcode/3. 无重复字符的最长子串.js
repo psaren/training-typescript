@@ -8,10 +8,10 @@ var lengthOfLongestSubstring = function (s) {
 
   for (let end = 0; end < s.length; end++) {
     if (s[end] in map) {
-      start = Math.max(map[s[end]], start);
+      start = Math.max(map[s[end]], start + 1);
     }
 
-    ans = Math.max(ans, end - start);
+    ans = Math.max(ans, end - start + 1);
     map[s[end]] = end;
   }
   console.log('map', map)
@@ -19,3 +19,5 @@ var lengthOfLongestSubstring = function (s) {
 };
 
 console.log(lengthOfLongestSubstring("bbbbb"));
+console.log(lengthOfLongestSubstring("abcabcbb"));
+console.log(lengthOfLongestSubstring(" "));
